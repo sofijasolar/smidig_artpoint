@@ -1,13 +1,21 @@
 require("dotenv").config();
 const express = require("express");
 const db = require("./config/db");
-const routes = require("./routes/userRoutes");
+const userRoutes = require("./routes/userRoutes");
+const artworkRoutes = require("./routes/artworkRoutes");
 
 const app = express();
-app.use("api", routes);
-
 // Middleware
 app.use(express.json());
+
+app.use("/api/users", userRoutes);
+app.use("/api/artworks", artworkRoutes);
+
+
+// Variables
+
+const port = process.env.PORT || 3001;
+
 
 // Connect to the databases
 db.getConnection((err, connection) => {
@@ -17,9 +25,10 @@ db.getConnection((err, connection) => {
   }
   console.log("Connected to the database!");
 
-  // Start the server
-  const port = process.env.PORT || 3000;
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
+  
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

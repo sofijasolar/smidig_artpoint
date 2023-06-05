@@ -9,7 +9,7 @@ const sequelize = new Sequelize({
 
 // Database config iptions
 
-const User = sequelize.define("User", {
+const User = sequelize.define("user", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -22,6 +22,9 @@ const User = sequelize.define("User", {
   password: {
     type: DataTypes.STRING(50),
   },
-});
+}, {
+    tableName: 'users', // Specify the table name as 'users'
+    timestamps: false, // Disable automatic timestamp fields
+  });
 
 module.exports = User;

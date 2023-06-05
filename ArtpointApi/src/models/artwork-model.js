@@ -1,8 +1,15 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const User = require('./User');
+const { DataTypes, Sequelize } = require("sequelize");
+const sequelize = new Sequelize({
+  database: "artpointdb",
+  username: "sofijapetra",
+  password: process.env.DB_PASSWORD,
+  host: "artpointdb.cvvnzrqzsx1c.eu-north-1.rds.amazonaws.com",
+  dialect: "mysql",
+});
 
-const Artwork = sequelize.define('Artwork', {
+const User = require('./user-model');
+
+const Artwork = sequelize.define('artwork', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -21,6 +28,10 @@ const Artwork = sequelize.define('Artwork', {
       key: 'username'
     }
   }
-});
+}, {
+  tableName: 'artworks', // Specify the table name as 'users'
+  timestamps: false, // Disable automatic timestamp fields
+}
+);
 
 module.exports = Artwork;
