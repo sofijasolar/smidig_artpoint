@@ -3,6 +3,7 @@ const express = require("express");
 const db = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const artworkRoutes = require("./routes/artworkRoutes");
+const artworkLbRoutes = require("./routes/artworkLbRoutes");
 
 const app = express();
 // Middleware
@@ -10,6 +11,7 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/artworks", artworkRoutes);
+app.use("/api/artwork-leaderboard", artworkLbRoutes);
 
 
 // Variables
