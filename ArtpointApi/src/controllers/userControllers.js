@@ -1,7 +1,6 @@
 const User = require("../models/user-model");
 const Artwork = require("../models/artwork-model");
 
-
 // Create a new user
 
 exports.createUser = async (req, res) => {

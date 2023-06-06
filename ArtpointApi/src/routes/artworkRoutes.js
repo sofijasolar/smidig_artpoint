@@ -10,4 +10,7 @@ router.post("/", artworkController.createArtwork);
 // Get all users
 router.get("/", artworkController.getArtwork);
 
+// Increment likesCount for an artwork
+router.patch("/:artworkId/like", artworkController.incrementLikesCount);
+
 module.exports = router;

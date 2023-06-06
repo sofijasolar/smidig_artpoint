@@ -7,31 +7,40 @@ const sequelize = new Sequelize({
   dialect: "mysql",
 });
 
-const User = require('./user-model');
+const User = require("./user-model");
 
-const Artwork = sequelize.define('artwork', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+const Artwork = sequelize.define(
+  "artwork",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    title: {
+      type: DataTypes.STRING(20),
+    },
+    imageURL: {
+      type: DataTypes.STRING(255),
+    },
+
+    likesCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    artist: {
+      type: DataTypes.STRING(20),
+      references: {
+        model: User,
+        key: "username",
+      },
+    },
   },
-  title: {
-    type: DataTypes.STRING(20)
-  },
-  imageURL: {
-    type: DataTypes.STRING(255)
-  },
-  artist: {
-    type: DataTypes.STRING(20),
-    references: {
-      model: User,
-      key: 'username'
-    }
+  {
+    tableName: "artworks", // Specify the table name as 'users'
+    timestamps: false, // Disable automatic timestamp fields
   }
-}, {
-  tableName: 'artworks', // Specify the table name as 'users'
-  timestamps: false, // Disable automatic timestamp fields
-}
 );
 
 module.exports = Artwork;

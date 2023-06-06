@@ -23,3 +23,26 @@ exports.getArtwork = async (req, res) => {
   }
 };
 
+// Increment likesCount for an artwork
+
+exports.incrementLikesCount = async (req, res) => {
+  try {
+    const { artworkId } = req.params;
+
+    // Find the artwork
+    const artwork = await Artwork.findByPk(artworkId);
+
+    if (!artwork) {
+      return res.status(404).json({ error: "Artwork not found" });
+    }
+
+    // Increment the likesCount
+
+    artwork.likesCount += 1;
+    await artwork.save();
+
+    res.status(200).json(artwork);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to increment likesCount" });
+  }
+};
