@@ -1,10 +1,25 @@
 const Artwork = require("../models/artwork-model");
+const User = require("../models/user-model");
 
-// Create a new user
+// Create a new artwork
 
 exports.createArtwork = async (req, res) => {
   try {
     const { title, imageURL, artist } = req.body;
+
+    if (!artist) {
+      return res.status(400).json({ error: "An artwork has to be posted by an existing user." });
+    }
+    if (!imageURL) {
+      return res.status(400).json({ error: "An image is required" });
+    }
+
+    // Check if the artist exists in the users table
+    const user = await User.findOne({ where: { username: artist } });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid artist" });
+    }
+
     const artwork = await Artwork.create({ title, imageURL, artist });
     res.status(201).json(artwork);
   } catch (error) {
@@ -12,7 +27,7 @@ exports.createArtwork = async (req, res) => {
   }
 };
 
-// Get all users
+// Get all artworks
 
 exports.getArtwork = async (req, res) => {
   try {

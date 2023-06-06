@@ -6,6 +6,23 @@ const Artwork = require("../models/artwork-model");
 exports.createUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ error: "Username and password are required" });
+    }
+    if (username.length < 4) {
+      return res.status(400).json({ error: "Username must be at least 4 characters long" });
+    }
+    
+    if (password.length < 8) {
+      return res.status(400).json({ error: "Password must be at least 8 characters long" });
+    }
+    
+    const existingUser = await User.findOne({ where: { username } });
+    if (existingUser) {
+      return res.status(409).json({ error: "Username already exists" });
+    }
+
     const user = await User.create({ username, password });
     res.status(201).json(user);
   } catch (error) {
