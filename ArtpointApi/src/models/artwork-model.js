@@ -22,6 +22,7 @@ const Artwork = sequelize.define(
     },
     imageURL: {
       type: DataTypes.STRING(255),
+      allowNull: false
     },
 
     likesCount: {
