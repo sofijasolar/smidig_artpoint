@@ -1,5 +1,6 @@
 const Artwork = require("../models/artwork-model");
 const User = require("../models/user-model");
+const ArtworkLeaderboard = require("../models/artwork-lb-model");
 
 // Create a new artwork
 
@@ -8,7 +9,9 @@ exports.createArtwork = async (req, res) => {
     const { title, imageURL, artist } = req.body;
 
     if (!artist) {
-      return res.status(400).json({ error: "An artwork has to be posted by an existing user." });
+      return res
+        .status(400)
+        .json({ error: "An artwork has to be posted by an existing user." });
     }
     if (!imageURL) {
       return res.status(400).json({ error: "An image is required" });
@@ -21,7 +24,22 @@ exports.createArtwork = async (req, res) => {
     }
 
     const artwork = await Artwork.create({ title, imageURL, artist });
-    res.status(201).json(artwork);
+
+    try {
+      // Create the artwork entry in the artworkLeaderboard table
+      const artworkEntry = await ArtworkLeaderboard.create({
+        artwork_id: artwork.id,
+        artwork_likesCount: artwork.likesCount,
+      });
+
+      res.status(201).json({ artwork, artworkEntry });
+    } catch (error) {
+      // Rollback the artwork creation if the leaderboard entry fails
+      await artwork.destroy();
+      res
+        .status(500)
+        .json({ error: "Failed to insert artwork into leaderboard" });
+    }
   } catch (error) {
     res.status(500).json({ error: "Failed to create artwork" });
   }
