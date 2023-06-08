@@ -59,23 +59,53 @@ exports.getArtwork = async (req, res) => {
 // Increment likesCount for an artwork
 
 exports.incrementLikesCount = async (req, res) => {
+  let artwork;
   try {
     const { artworkId } = req.params;
 
     // Find the artwork
-    const artwork = await Artwork.findByPk(artworkId);
+    artwork = await Artwork.findByPk(artworkId);
 
     if (!artwork) {
       return res.status(404).json({ error: "Artwork not found" });
     }
 
-    // Increment the likesCount
+    // Create a backup of the original likesCount
+    const originalLikesCount = artwork.likesCount;
 
+    // Increment the likesCount
     artwork.likesCount += 1;
+
+    // Save the updated likesCount in artworks table
     await artwork.save();
 
-    res.status(200).json(artwork);
+    // Find the corresponding leaderboard entry
+    const leaderboardEntry = await ArtworkLeaderboard.findOne({
+      where: { artwork_id: artworkId },
+    });
+
+    if (!leaderboardEntry) {
+      // If leaderboard entry doesn't exist, create a new one
+      await ArtworkLeaderboard.create({
+        artwork_id: artwork.id,
+        artwork_likesCount: artwork.likesCount,
+      });
+    } else {
+      // Update the artwork_likesCount in artworkLeaderboard table
+      leaderboardEntry.artwork_likesCount = artwork.likesCount;
+      await leaderboardEntry.save();
+    }
+
+    res.status(201).json({ artwork });
   } catch (error) {
+    // Handle the error and rollback the likesCount in artworks table if artwork is defined
+    if (artwork) {
+      artwork.likesCount = originalLikesCount;
+      await artwork.save();
+    }
     res.status(500).json({ error: "Failed to increment likesCount" });
   }
 };
+
+
+
