@@ -4,8 +4,18 @@ const db = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const artworkRoutes = require("./routes/artworkRoutes");
 const artworkLbRoutes = require("./routes/artworkLbRoutes");
+const cors = require('cors');
+
+
 
 const app = express();
+// Configure CORS
+const corsOptions = {
+  origin: 'http://localhost:19006', // Replace with your React Native app's domain
+  methods: 'GET, POST, PUT, DELETE',
+  allowedHeaders: 'Content-Type',
+};
+app.use(cors(corsOptions));
 // Middleware
 app.use(express.json());
 
