@@ -9,6 +9,8 @@ router.post("/", artworkController.createArtwork);
 
 // Get all users
 router.get("/", artworkController.getArtwork);
+//get sorted artworks by likes
+router.get("/sortedByLikes", artworkController.sortArtworksByLikes);
 
 // Increment likesCount for an artwork
 router.patch("/:artworkId/like", artworkController.incrementLikesCount);

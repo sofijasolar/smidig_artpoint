@@ -108,4 +108,15 @@ exports.incrementLikesCount = async (req, res) => {
 };
 
 
+// Sort all artworks
 
+exports.sortArtworksByLikes = async (req, res) => {
+  try {
+    const sortedArtworks = await Artwork.findAll({
+      order: [['likesCount', 'DESC']]
+    });
+    res.status(200).json(sortedArtworks);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch sortedArtworks" });
+  }
+};
