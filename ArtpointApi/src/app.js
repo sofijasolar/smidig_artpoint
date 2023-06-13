@@ -12,7 +12,7 @@ const app = express();
 // Configure CORS
 const corsOptions = {
   origin: 'http://localhost:19006', // Replace with your React Native app's domain
-  methods: 'GET, POST, PUT, DELETE',
+  methods: 'GET, POST, PUT, PATCH, DELETE',
   allowedHeaders: 'Content-Type',
 };
 app.use(cors(corsOptions));

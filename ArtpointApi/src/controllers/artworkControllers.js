@@ -56,6 +56,23 @@ exports.getArtwork = async (req, res) => {
   }
 };
 
+exports.getArtworkById = async (req, res) => {
+  const artworkId = req.params.artworkId; // Assuming the artwork ID is passed as a URL parameter
+  //console.log(artworkId);
+  try {
+    const artwork = await Artwork.findByPk(artworkId); // Assuming you're using Sequelize for database operations
+
+    if (!artwork) {
+      return res.status(404).json({ error: "Artwork not found" });
+    }
+
+    res.status(200).json(artwork);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch artwork" });
+  }
+};
+
+
 // Increment likesCount for an artwork
 
 exports.incrementLikesCount = async (req, res) => {
@@ -120,3 +137,4 @@ exports.sortArtworksByLikes = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch sortedArtworks" });
   }
 };
+
